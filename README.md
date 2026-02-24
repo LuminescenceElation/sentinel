@@ -6,9 +6,9 @@ Self-healing monitoring platform (DevOps/SRE portfolio project)
 
 ## Overview
 
-Sentinel is a lightweight self-healing monitoring platform designed to demonstrate modern DevOps and Site Reliability Engineering (SRE) practices.
+Sentinel is a lightweight self-healing monitoring platform designed to demonstrate practical DevOps and Site Reliability Engineering (SRE) practices using containerized services.
 
-It monitors services, detects failures, and automatically recovers them using container orchestration and health checks.
+It monitors services, detects failures, and automatically recovers them using Docker health checks, restart policies, and a custom monitoring agent.
 
 This project is a work in progress and evolves as new reliability features are added.
 
@@ -16,110 +16,101 @@ This project is a work in progress and evolves as new reliability features are a
 
 ## Current Capabilities
 
-- Containerised service with health endpoint
-- Docker health checks for automated health monitoring
+- Containerized FastAPI demo service with health endpoint
+- Docker health checks for automated service validation
 - Self-healing via container restart policies
 - Cross-container monitoring service
 - Service-to-service networking via Docker Compose
-- Real-time health logging
+- Real-time health logging from monitor agent
 
 ---
 
-## Architecture
+**Components**
 
-+-------------------+ health check +-------------------+
-| monitor service | ─────────────────────────▶ | demo-service |
-| (Sentinel) | | FastAPI app |
-+-------------------+ +-------------------+
-│ │
-│ logs health status │
-▼ ▼
-Detects failure /health endpoint
-Detects recovery Docker healthcheck
-
-
----
-
-## Project Structure
-
-sentinel/
-├── demo-service/ # Example service being monitored
-│ ├── Dockerfile
-│ ├── main.py
-│ └── requirements.txt
-│
-├── monitor/ # Sentinel monitoring service
-│ ├── Dockerfile
-│ ├── main.py
-│ └── requirements.txt
-│
-├── deploy/
-│ └── docker-compose.yml
-│
-└── README.md
+- **demo-service** — FastAPI application exposing `/health`
+- **monitor** — Python monitoring agent polling service health
+- **Docker Compose** — Orchestrates services and networking
+- **Docker health checks** — Provide container health status
+- **Restart policies** — Enable automatic recovery
 
 ---
 
 ## How It Works
 
-### 1. Demo Service
-- Runs a FastAPI application
-- Exposes `/health` endpoint
-- Docker healthcheck probes this endpoint
-
-### 2. Docker Healthcheck
-Docker automatically checks:
-http://localhost:8080/health
-
-
-If the service fails:
-- container becomes **unhealthy**
-- restart policy restarts it automatically
-
-### 3. Sentinel Monitor
-The monitor container:
-- polls the service via Docker network
-- logs health status
-- detects outages and recovery
+1. Docker Compose starts both services.
+2. The demo service exposes a `/health` endpoint.
+3. Docker health checks validate the service inside the container.
+4. The monitor container polls the service over the Docker network.
+5. If the service fails, Docker restart policies automatically recover it.
+6. The monitor logs service status in real time.
 
 ---
 
 ## Running the Project
 
-From the `deploy` directory:
+### Prerequisites
+- Docker Desktop
+- Git
+- VS Code (recommended)
 
-```bash
-docker compose up --build
+### Start services
+    cd deploy
+    docker compose up --build
 
-Check container status:
-docker compose ps
+### View monitor logs
+    cd deploy
+    docker compose logs -f monitor
 
-View monitor logs:
-docker compose logs -f monitor
+### Stop services
+    cd deploy
+    docker compose down
 
-Example Output
-🔎 Sentinel monitor started
-❌ demo-service unreachable
-✅ demo-service is healthy
+### Example output
+    🔎 Sentinel monitor started
+    ❌ demo-service unreachable: connection refused
+    ✅ demo-service is healthy
 
-**What This Demonstrates
-This project showcases production-style reliability patterns:
-- Health checks & liveness probes
-- Self-healing infrastructure
-- Service discovery via container DNS
-- Observability through structured logging
-- Multi-service orchestration
+This demonstrates startup ordering and automatic recovery.
 
-Roadmap (Planned Features)
-- Health state transition detection (failure → recovery)
-- Metrics export (Prometheus)
-- Alerting (Slack/webhooks)
-- Web dashboard for service status
-- Failure simulation endpoints
-- Kubernetes deployment
+## Project Structure
 
-Goal
-Showcase production-style reliability engineering in a simple, elegant portfolio project.
+    sentinel/
+    ├─ demo-service/          # FastAPI demo service
+    ├─ monitor/               # Monitoring agent
+    └─ deploy/                # Docker Compose configuration
 
-Author
-Built as part of a DevOps/SRE learning journey and portfolio.
+## Architecture
+
+    monitor (Sentinel agent)  -- polls /health -->  demo-service (FastAPI)
+              |
+              +-- logs health status to standard output
+
+## Roadmap
+
+### Planned enhancements
+
+- Metrics collection (Prometheus)
+- Visual dashboards (Grafana)
+- Alerting (Slack/email/webhooks)
+- Failure simulation scenarios
+- Kubernetes deployment version
+
+---
+
+## Why This Project
+
+This project showcases production-style reliability engineering concepts in a simple, elegant portfolio piece:
+
+- Observability fundamentals  
+- Automated recovery  
+- Container orchestration  
+- Service health monitoring  
+- Infrastructure as code mindset  
+
+---
+
+## Author
+
+Built as part of my transition into DevOps / Cloud Engineering.
+
+GitHub: https://github.com/LuminescenceElation
