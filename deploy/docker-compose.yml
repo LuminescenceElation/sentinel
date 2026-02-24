@@ -1,0 +1,12 @@
+services:
+  demo-service:
+    build: ../demo-service
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/health').read()\""]
+      interval: 5s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
