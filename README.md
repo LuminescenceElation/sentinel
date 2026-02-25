@@ -1,6 +1,5 @@
 # Sentinel
-
-Self-healing monitoring platform (DevOps/SRE portfolio project)
+Self-healing monitoring platform demonstrating automated recovery, health checks, and service observability (DevOps/SRE portfolio project)
 
 ---
 
@@ -10,7 +9,9 @@ Sentinel is a lightweight self-healing monitoring platform designed to demonstra
 
 It monitors services, detects failures, and automatically recovers them using Docker health checks, restart policies, and a custom monitoring agent.
 
-This project is a work in progress and evolves as new reliability features are added.
+This project demonstrates real-world reliability patterns such as health checks, automatic recovery, and service observability.
+
+It is designed to evolve as additional reliability features are implemented.
 
 ---
 
@@ -19,7 +20,7 @@ This project is a work in progress and evolves as new reliability features are a
 - Containerized FastAPI demo service with health endpoint
 - Docker health checks for automated service validation
 - Self-healing via container restart policies
-- Cross-container monitoring service
+- Cross-container monitoring agent
 - Service-to-service networking via Docker Compose
 - Real-time health logging from monitor agent
 
@@ -46,31 +47,57 @@ This project is a work in progress and evolves as new reliability features are a
 
 ---
 
-## Running the Project
+### Example output (startup sequence)
 
-### Prerequisites
-- Docker Desktop
-- Git
-- VS Code (recommended)
-
-### Start services
-    cd deploy
-    docker compose up --build
-
-### View monitor logs
-    cd deploy
-    docker compose logs -f monitor
-
-### Stop services
-    cd deploy
-    docker compose down
-
-### Example output
-    🔎 Sentinel monitor started
-    ❌ demo-service unreachable: connection refused
-    ✅ demo-service is healthy
+```text
+🔎 Sentinel monitor started
+❌ demo-service unreachable: connection refused
+✅ demo-service is healthy
+```
 
 This demonstrates startup ordering and automatic recovery.
+
+## Demo: Failure Detection & Recovery
+
+Sentinel continuously checks the `demo-service` health endpoint and logs state changes.
+
+### What you’ll see
+- ✅ Normal healthy checks
+- ❌ A brief “unreachable” period after a simulated failure
+- ✅ Recovery confirmed once the service returns (and the container restarts)
+
+### Example output (real run)
+
+```bash
+monitor-1 | service=demo-service status=down status_code=na event=unreachable
+monitor-1 | service=demo-service status=up status_code=200 recoveries_total=1 event=healthy
+```
+
+This demonstrates startup ordering, failure detection, and automatic recovery.
+
+---
+
+## Running the Project
+
+### Start services
+```bash
+cd deploy
+docker compose up --build
+```
+
+### View monitor logs
+```bash
+cd deploy
+docker compose logs -f monitor
+```
+
+### Stop services
+```bash
+cd deploy
+docker compose down
+```
+
+---
 
 ## Project Structure
 
@@ -105,12 +132,11 @@ This project showcases production-style reliability engineering concepts in a si
 - Automated recovery  
 - Container orchestration  
 - Service health monitoring  
-- Infrastructure as code mindset  
+- Infrastructure as code mindset
+- Demonstrates production-minded thinking in a minimal, reproducible environment
 
 ---
 
 ## Author
 
-Built as part of my transition into DevOps / Cloud Engineering.
-
-GitHub: https://github.com/LuminescenceElation
+Built by Luminescence Elation as part of a DevOps learning portfolio.
