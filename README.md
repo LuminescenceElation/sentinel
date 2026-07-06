@@ -50,9 +50,9 @@ It is designed to evolve as additional reliability features are implemented.
 ### Example output (startup sequence)
 
 ```text
-🔎 Sentinel monitor started
-❌ demo-service unreachable: connection refused
-✅ demo-service is healthy
+Sentinel monitor started
+demo-service unreachable: connection refused
+demo-service is healthy
 ```
 
 This demonstrates startup ordering and automatic recovery.
@@ -62,9 +62,9 @@ This demonstrates startup ordering and automatic recovery.
 Sentinel continuously checks the `demo-service` health endpoint and logs state changes.
 
 ### What you’ll see
-- ✅ Normal healthy checks
-- ❌ A brief “unreachable” period after a simulated failure
-- ✅ Recovery confirmed once the service returns (and the container restarts)
+- Normal healthy checks
+- A brief “unreachable” period after a simulated failure
+- Recovery confirmed once the service returns (and the container restarts)
 
 ### Example output (real run)
 
